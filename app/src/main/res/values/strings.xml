@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Nummerwang</string>
+    <string name="speak_button">Practice speaking</string>
+    <string name="listen_button">Practice listening</string>
 </resources>

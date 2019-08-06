@@ -2,4 +2,9 @@
     <string name="app_name">Nummerwang</string>
     <string name="speak_button">Practice speaking</string>
     <string name="listen_button">Practice listening</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="submit_button">Submit</string>
+    <string name="listen_instruction_text">A number is playing. What did you hear?</string>
 </resources>

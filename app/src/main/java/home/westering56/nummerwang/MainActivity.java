@@ -3,7 +3,6 @@ package home.westering56.nummerwang;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,45 +10,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static class MainActivityViewModel extends ViewModel {
-        public MainActivityViewModel() {
-        }
-
-    }
-
-    private MainActivityViewModel mViewModel;
     private TextView mLogTextView;
     Button mListenButton;
-    private TextToSpeech mTextToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         mLogTextView = findViewById(R.id.logTextView);
 
         findViewById(R.id.speakButton).setOnClickListener(this::onSpeakingClick);
 
         mListenButton = findViewById(R.id.listenButton);
-        mListenButton.setEnabled(false);
         mListenButton.setOnClickListener(this::onListenClick);
 
-        mTextToSpeech = new TextToSpeech(this, status -> {
-            mLogTextView.append("TextToSpeech initialised: " + status);
-            int langStatus = mTextToSpeech.setLanguage(Locale.GERMANY);
-            mLogTextView.append("Setting text to speech language to German: " + langStatus + '\n');
-            mListenButton.setEnabled(status == TextToSpeech.SUCCESS);
-        });
     }
 
     private void onSpeakingClick(@NonNull View view) {
@@ -84,16 +63,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        if (mTextToSpeech != null) {
-            mTextToSpeech.shutdown();
-            mTextToSpeech = null;
-        }
-        super.onDestroy();
-    }
-
+    /** Show the listening exercise dialog. */
     public void onListenClick(View v) {
-        mTextToSpeech.speak("42", TextToSpeech.QUEUE_ADD, null, "42");
+        ListenFragment fragment = ListenFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), "listen");
     }
 }

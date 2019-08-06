@@ -3,46 +3,36 @@ package home.westering56.nummerwang;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView mLogTextView;
-    Button mListenButton;
+    private static final String TAG = "NummerWangMain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLogTextView = findViewById(R.id.logTextView);
 
-        findViewById(R.id.speakButton).setOnClickListener(this::onSpeakingClick);
-
-        mListenButton = findViewById(R.id.listenButton);
-        mListenButton.setOnClickListener(this::onListenClick);
+        findViewById(R.id.speakButton).setOnClickListener(v -> {
+            Intent intent = buildSpeechRecognizerIntent();
+            startActivityForResult(intent, 0);
+        });
+        findViewById(R.id.listenButton).setOnClickListener(this::onListenClick);
 
     }
 
-    private void onSpeakingClick(@NonNull View view) {
-        mLogTextView.setText("");
-        Intent intent = buildSpeechRecognizerIntent("42");
-        startActivityForResult(intent, 0);
-    }
-
-    private Intent buildSpeechRecognizerIntent(@NonNull String prompt) {
+    private Intent buildSpeechRecognizerIntent() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-DE");
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, prompt);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "42");
         return intent;
     }
 
@@ -53,17 +43,23 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (resultCode != RESULT_OK) {
-            mLogTextView.append("Speech recognition failed: " + resultCode + '\n');
+            Log.d(TAG, "Speech recognition failed: " + resultCode);
+            return;
+        }
+        if (data == null) {
+            Log.w(TAG, "No speech data returned");
             return;
         }
         ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         float[] confidences = data.getFloatArrayExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES);
         for (int i = 0; i < results.size(); i++) {
-            mLogTextView.append(results.get(i) + ": " + confidences[i] + '\n');
+            Log.d(TAG, results.get(i) + ": " + confidences[i]);
         }
     }
 
-    /** Show the listening exercise dialog. */
+    /**
+     * Show the listening exercise dialog.
+     */
     public void onListenClick(View v) {
         ListenFragment fragment = ListenFragment.newInstance();
         fragment.show(getSupportFragmentManager(), "listen");

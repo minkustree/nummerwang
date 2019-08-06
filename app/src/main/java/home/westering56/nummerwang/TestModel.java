@@ -31,6 +31,10 @@ public class TestModel extends ViewModel {
         return guess == mQuestion;
     }
 
+    public int getCorrectAnswer() {
+        return mQuestion;
+    }
+
     public void speakQuestion(@NonNull TextToSpeech tts) {
         String question = Integer.toString(mQuestion);
         tts.speak(question, TextToSpeech.QUEUE_ADD, null, question);

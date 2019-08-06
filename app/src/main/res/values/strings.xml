@@ -7,4 +7,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="submit_button">Submit</string>
     <string name="listen_instruction_text">A number is playing. What did you hear?</string>
+    <string name="correct_toast">Yes! it was %1$d</string>
+    <string name="incorrect_toast">No! it was %1$d</string>
 </resources>
